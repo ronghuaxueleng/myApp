@@ -11,7 +11,8 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:visibility="visible">
 
         <TextView
             android:id="@+id/txt_signout"
@@ -47,10 +48,11 @@
 
         <TextView
             android:id="@+id/txt_content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="15dp"
+            android:layout_width="403dp"
+            android:layout_height="536dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="128dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txt_signin" />
     </android.support.constraint.ConstraintLayout>
