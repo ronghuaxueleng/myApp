@@ -78,8 +78,7 @@ public class DakaModelImpl extends ModelBase {
         headers.put("Host", host);
         headers.put("Content-Type", "text/plain");
         ParamsBuilder paramsBuilder = ParamsBuilder.build().command(command);
-//        String bodyParams = "{\"checktype\":0,\"lng\":116.3730870922896,\"lat\":39.957986127185045,\"location\":\"" + location + "\",\"projectid\":\"7826182FC00000211F2EC76EB5CDF805\",\"turnname\":\"\",\"method\":7,\"accuracy\":21.64131736755371,\"memo\":\"\",\"picnum\":0,\"ssid\":\"" + ssid + "\",\"mac\":\"84:d9:31:06:5b:40\",\"version\":120}";
-        String bodyParams = "{\"checktype\":0,\"lng\":116.3730870922896,\"lat\":39.957986127185045,\"location\":\"" + location + "\",\"projectid\":\"7985CDBFC0000001E215D863471F6DAD\",\"turnname\":\"\",\"method\":7,\"accuracy\":21.64131736755371,\"memo\":\"\",\"picnum\":0,\"ssid\":\"" + ssid + "\",\"mac\":\"84:d9:31:06:5b:40\",\"version\":120}";
+        String bodyParams = "{\"checktype\":0,\"lng\":116.3730870922896,\"lat\":39.957986127185045,\"location\":\"" + location + "\",\"projectid\":\"8E3BC421000000410E040D0226E1A345\",\"turnname\":\"\",\"method\":7,\"accuracy\":21.64131736755371,\"memo\":\"\",\"picnum\":0,\"ssid\":\"" + ssid + "\",\"mac\":\"84:d9:31:06:5b:40\",\"version\":120}";
         paramsBuilder.url(url).heads(headers).paramType(2).mediaType(MediaType.parse("text/plain; charset=utf-8")).json(bodyParams);
         sendOkHttpPost(paramsBuilder, netWorkListener);
     }
