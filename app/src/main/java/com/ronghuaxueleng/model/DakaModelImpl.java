@@ -78,7 +78,7 @@ public class DakaModelImpl extends ModelBase {
         headers.put("Host", host);
         headers.put("Content-Type", "text/plain");
         ParamsBuilder paramsBuilder = ParamsBuilder.build().command(command);
-        String bodyParams = "{\"checktype\":0,\"lng\":116.3730870922896,\"lat\":39.957986127185045,\"location\":\"" + location + "\",\"projectid\":\"8E3BC425E000004189C0326029FEBE53\",\"turnname\":\"\",\"method\":7,\"accuracy\":21.64131736755371,\"memo\":\"\",\"picnum\":0,\"ssid\":\"" + ssid + "\",\"mac\":\"84:d9:31:06:5b:40\",\"version\":120}";
+        String bodyParams = "{\"checktype\":0,\"lng\":116.3730870922896,\"lat\":39.957986127185045,\"location\":\"" + location + "\",\"projectid\":\"8E3BC40D00000081143DFCE92513ED0E\",\"turnname\":\"\",\"method\":7,\"accuracy\":21.64131736755371,\"memo\":\"\",\"picnum\":0,\"ssid\":\"" + ssid + "\",\"mac\":\"84:d9:31:06:5b:40\",\"version\":120}";
         paramsBuilder.url(url).heads(headers).paramType(2).mediaType(MediaType.parse("text/plain; charset=utf-8")).json(bodyParams);
         sendOkHttpPost(paramsBuilder, netWorkListener);
     }
