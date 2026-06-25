@@ -131,7 +131,7 @@ public class DakaFragment extends BaseFragment {
                         if (System.currentTimeMillis() - timeStamp >= 0) {
                             boolean needcheckout = checktimes.getBoolean("needcheckout");
                             if (needcheckout) {
-                                DakaModelImpl.netWork().worklist(GANK_COMMAND, new WorklistNetWorkListener(), tenantId);
+                                DakaModelImpl.netWork().signout(GANK_COMMAND, new SignOutNetWorkListener(), tenantId);
                             } else {
                                 DakaModelImpl.netWork().checklist(GANK_COMMAND, new CheckListWorkListener(), tenantId);
                             }
@@ -140,27 +140,6 @@ public class DakaFragment extends BaseFragment {
                         }
                     }
                     LogUtils.i("请求结果", String.valueOf(jsonObject));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    class WorklistNetWorkListener implements NetWorkListener {
-        @Override
-        public void onNetCallBack(int command, Object object) {
-            if (command == GANK_COMMAND) {
-                String result = (String) object;
-                try {
-                    JSONObject jsonObject = new JSONObject(result);
-                    JSONArray projectworks = jsonObject.getJSONArray("projectworks");
-                    JSONObject work = projectworks.getJSONObject(0);
-                    String id = work.getString("id");
-                    String projectid = work.getString("projectid");
-                    DakaModelImpl.netWork().signout(GANK_COMMAND, new SignOutNetWorkListener(), tenantId, id, projectid);
-                    txt_content.setText(work.toString());
-                    LogUtils.i("请求结果", work.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
