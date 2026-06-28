@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <!-- 往SDCard写入数据权限 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -19,7 +20,7 @@
         android:theme="@style/AppTheme"
         android:name="com.ronghuaxueleng.base.MyApplication"
         >
-        <activity android:name="com.ronghuaxueleng.activity.MainActivity"
+        <activity android:name="com.ronghuaxueleng.activity.VpnCaptureActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme_base"
             >
@@ -30,10 +31,35 @@
             </intent-filter>
         </activity>
 
+        <activity android:name="com.ronghuaxueleng.activity.MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme_base"
+            />
+
+        <activity android:name="com.ronghuaxueleng.activity.VpnSessionDetailActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme_base"
+            />
+
+        <activity android:name="com.ronghuaxueleng.activity.VpnRuleListActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme_base"
+            />
+
         <activity android:name="com.ronghuaxueleng.activity.WebViewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme_base"
             />
+
+        <service
+            android:name="com.ronghuaxueleng.vpn.VpnCaptureService"
+            android:enabled="true"
+            android:exported="false"
+            android:permission="android.permission.BIND_VPN_SERVICE">
+            <intent-filter>
+                <action android:name="android.net.VpnService" />
+            </intent-filter>
+        </service>
 
 
     </application>

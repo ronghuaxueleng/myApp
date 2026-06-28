@@ -3,4 +3,24 @@
     <string name="network_unknow">网络不可用,请检查网络</string>
     <string name="network_overtime">请求超时,请稍后再试</string>
     <string name="server_error">服务器异常,请稍后再试</string>
+    <string name="vpn_capture_title">Reqable 风格骨架</string>
+    <string name="vpn_capture_subtitle">本地 VPN 抓包骨架，当前仅完成页面、服务占位与会话模型。</string>
+    <string name="vpn_start">启动骨架服务</string>
+    <string name="vpn_stop">停止骨架服务</string>
+    <string name="vpn_open_legacy">打开旧工具页</string>
+    <string name="vpn_open_rules">查看规则骨架</string>
+    <string name="vpn_state_idle">状态：未启动</string>
+    <string name="vpn_state_running">状态：骨架服务运行中</string>
+    <string name="vpn_state_waiting">状态：等待 VPN 授权</string>
+    <string name="vpn_empty_hint">这里先展示占位会话。下一步可以接 TCP/HTTP 解析与规则引擎。</string>
+    <string name="vpn_sessions_title">Sessions</string>
+    <string name="vpn_detail_title">会话详情</string>
+    <string name="vpn_rules_title">规则骨架</string>
+    <string name="vpn_detail_overview">概览</string>
+    <string name="vpn_detail_request">Request</string>
+    <string name="vpn_detail_response">Response</string>
+    <string name="vpn_rule_match">匹配</string>
+    <string name="vpn_rule_action">动作</string>
+    <string name="vpn_notification_title">抓包骨架服务</string>
+    <string name="vpn_notification_text">服务运行中，当前未建立真实隧道。</string>
 </resources>
