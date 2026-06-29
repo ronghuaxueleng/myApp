@@ -2,6 +2,7 @@ package com.ronghuaxueleng.model;
 
 import com.ronghuaxueleng.bean.basebean.ParamsBuilder;
 import com.ronghuaxueleng.utils.Base64Utils;
+import com.ronghuaxueleng.utils.LogUtils;
 
 import java.util.HashMap;
 
@@ -27,7 +28,7 @@ public class DakaModelImpl extends ModelBase {
 
     private final String host = Base64Utils.decodeToString("YXBwLmRha2FiZy5jb20=");
     private final String ssid = Base64Utils.decodeToString("Sml1UWktT2ZmaWNl");
-    private final String verifycontent = "AA0DC6D1F80024160F25627413D2BD23";
+    private final String verifycontent = "8F8057E632341985408C6829111F4673";
     private final String location = Base64Utils.decodeToString("5YyX5Lqs5biC5rW35reA5Yy65b+X5by65Y2X5Zut5LmF5YW26L2v5Lu2KOaWh+aFp+WbreWKnuWFrOWMuik=");
     private final String mac = "2a:b2:b9:3c:a7:97";
     private final String phonetype = "BMH-AN20";
@@ -40,6 +41,7 @@ public class DakaModelImpl extends ModelBase {
     private final int accuracy = 40;
     private final int mockprobability = -1;
     private final int version = 120;
+    private final String myphone = Base64Utils.decodeToString("MTU5MDEyNTQ2ODA=");
 
     /**
      * 检查版本信息
@@ -47,57 +49,102 @@ public class DakaModelImpl extends ModelBase {
     public void checkver(int command, NetWorkListener netWorkListener) {
         String checkver = "aHR0cHM6Ly9hcHAuZGFrYWJnLmNvbS9jaGVja3Zlcj9tb2JpbGVvcz0wJnZlcnNpb249MTc1JnRpbWVzdGFtcD0lcw==";
         String url = String.format(Base64Utils.decodeToString(checkver), System.currentTimeMillis());
+        LogUtils.i("打卡请求", "checkver url=" + url);
         HashMap<String, String> headers = buildHeaders();
         ParamsBuilder paramsBuilder = ParamsBuilder.build().command(command);
-        paramsBuilder.url(url).heads(headers).paramType(2).mediaType(MediaType.parse("text/plain; charset=utf-8")).json(url);
+        paramsBuilder.url(url)
+                .heads(headers)
+                .paramType(2)
+                .mediaType(MediaType.parse("text/plain; charset=utf-8"))
+                .overrideError(true)
+                .json(url);
         sendOkHttpPost(paramsBuilder, netWorkListener);
     }
 
     public void mobilefwd(int command, NetWorkListener netWorkListener, String versionno) {
         String mobilefwd = "aHR0cHM6Ly9hcHAuZGFrYWJnLmNvbS9tb2JpbGVmd2Q/dmVyaWZ5dHlwZT0wJnZlcmlmeWNvbnRlbnQ9JXMmbW9iaWxlb3M9MCZ2ZXJzaW9uPSVzJnRpbWVzdGFtcD0lcw==";
-        String url = String.format(Base64Utils.decodeToString(mobilefwd), verifycontent, versionno, System.currentTimeMillis());
+        String url = String.format(Base64Utils.decodeToString(mobilefwd), myphone, versionno, System.currentTimeMillis());
+        LogUtils.i("打卡请求", "mobilefwd url=" + url);
         HashMap<String, String> headers = buildHeaders();
         ParamsBuilder paramsBuilder = ParamsBuilder.build().command(command);
-        paramsBuilder.url(url).heads(headers).paramType(2).mediaType(MediaType.parse("text/plain; charset=utf-8")).json(url);
+        paramsBuilder.url(url)
+                .heads(headers)
+                .paramType(2)
+                .mediaType(MediaType.parse("text/plain; charset=utf-8"))
+                .overrideError(true)
+                .json(url);
         sendOkHttpPost(paramsBuilder, netWorkListener);
     }
 
     public void getchecktimes(int command, NetWorkListener netWorkListener, String tenantId) {
         String getchecktimes = "aHR0cHM6Ly9hcHAuZGFrYWJnLmNvbS9tb2JpbGUvZ2V0Y2hlY2t0aW1lcz92ZXJpZnl0eXBlPTAmdmVyaWZ5Y29udGVudD0lcyZ0ZW5hbnRpZD0lcyZ0aW1lc3RhbXA9JXM=";
-        String url = String.format(Base64Utils.decodeToString(getchecktimes), verifycontent, tenantId, System.currentTimeMillis());
+        String url = String.format(Base64Utils.decodeToString(getchecktimes), myphone, tenantId, System.currentTimeMillis());
+        LogUtils.i("打卡请求", "getchecktimes tenantId=" + tenantId);
+        LogUtils.i("打卡请求", "getchecktimes url=" + url);
         HashMap<String, String> headers = buildHeaders();
         ParamsBuilder paramsBuilder = ParamsBuilder.build().command(command);
-        paramsBuilder.url(url).heads(headers).paramType(2).mediaType(MediaType.parse("text/plain; charset=utf-8")).json("{\"querycount \":true,\"staffid\":\"613E771AE00000016956919D61C25D9B\"}");
+        String body = "{\"querycount \":true,\"staffid\":\"613E771AE00000016956919D61C25D9B\"}";
+        LogUtils.i("打卡请求", "getchecktimes body=" + body);
+        paramsBuilder.url(url)
+                .heads(headers)
+                .paramType(2)
+                .mediaType(MediaType.parse("text/plain; charset=utf-8"))
+                .overrideError(true)
+                .json(body);
         sendOkHttpPost(paramsBuilder, netWorkListener);
     }
 
     public void signin(int command, NetWorkListener netWorkListener, String tenantId) {
         String signin = "aHR0cHM6Ly9hcHAuZGFrYWJnLmNvbS9tb2JpbGUvY2hlY2s/dmVyaWZ5dHlwZT0xJnZlcmlmeWNvbnRlbnQ9JXMmdGVuYW50aWQ9JXMmdGltZXN0YW1wPSVz";
         String url = String.format(Base64Utils.decodeToString(signin), verifycontent, tenantId, System.currentTimeMillis());
+        LogUtils.i("打卡请求", "signin tenantId=" + tenantId);
+        LogUtils.i("打卡请求", "signin url=" + url);
         HashMap<String, String> headers = buildHeaders();
         ParamsBuilder paramsBuilder = ParamsBuilder.build().command(command);
         String bodyParams = buildSigninBodyParams();
-        paramsBuilder.url(url).heads(headers).paramType(2).mediaType(MediaType.parse("text/plain; charset=utf-8")).json(bodyParams);
+        LogUtils.i("打卡请求", "signin body=" + bodyParams);
+        paramsBuilder.url(url)
+                .heads(headers)
+                .paramType(2)
+                .mediaType(MediaType.parse("text/plain; charset=utf-8"))
+                .overrideError(true)
+                .json(bodyParams);
         sendOkHttpPost(paramsBuilder, netWorkListener);
     }
 
     public void signout(int command, NetWorkListener netWorkListener, String tenantId) {
         String signout = "aHR0cHM6Ly9hcHAuZGFrYWJnLmNvbS9tb2JpbGUvY2hlY2s/dmVyaWZ5dHlwZT0xJnZlcmlmeWNvbnRlbnQ9JXMmdGVuYW50aWQ9JXMmdGltZXN0YW1wPSVz";
         String url = String.format(Base64Utils.decodeToString(signout), verifycontent, tenantId, System.currentTimeMillis());
+        LogUtils.i("打卡请求", "signout tenantId=" + tenantId);
+        LogUtils.i("打卡请求", "signout url=" + url);
         HashMap<String, String> headers = buildHeaders();
         ParamsBuilder paramsBuilder = ParamsBuilder.build().command(command);
         String bodyParams = buildSignoutBodyParams();
-        paramsBuilder.url(url).heads(headers).paramType(2).mediaType(MediaType.parse("text/plain; charset=utf-8")).json(bodyParams);
+        LogUtils.i("打卡请求", "signout body=" + bodyParams);
+        paramsBuilder.url(url)
+                .heads(headers)
+                .paramType(2)
+                .mediaType(MediaType.parse("text/plain; charset=utf-8"))
+                .overrideError(true)
+                .json(bodyParams);
         sendOkHttpPost(paramsBuilder, netWorkListener);
     }
 
     public void checklist(int command, NetWorkListener netWorkListener, String tenantId) {
         String checklist = "aHR0cHM6Ly9hcHAuZGFrYWJnLmNvbS9tb2JpbGUvY2hlY2tsaXN0P3ZlcmlmeXR5cGU9MCZ2ZXJpZnljb250ZW50PSVzJnRlbmFudGlkPSVzJnRpbWVzdGFtcD0lcw==";
-        String url = String.format(Base64Utils.decodeToString(checklist), verifycontent, tenantId, System.currentTimeMillis());
+        String url = String.format(Base64Utils.decodeToString(checklist), myphone, tenantId, System.currentTimeMillis());
+        LogUtils.i("打卡请求", "checklist tenantId=" + tenantId);
+        LogUtils.i("打卡请求", "checklist url=" + url);
         HashMap<String, String> headers = buildHeaders();
         ParamsBuilder paramsBuilder = ParamsBuilder.build().command(command);
         String bodyParams = "{\"offset\":0,\"limit\":-1}";
-        paramsBuilder.url(url).heads(headers).paramType(2).mediaType(MediaType.parse("text/plain; charset=utf-8")).json(bodyParams);
+        LogUtils.i("打卡请求", "checklist body=" + bodyParams);
+        paramsBuilder.url(url)
+                .heads(headers)
+                .paramType(2)
+                .mediaType(MediaType.parse("text/plain; charset=utf-8"))
+                .overrideError(true)
+                .json(bodyParams);
         sendOkHttpPost(paramsBuilder, netWorkListener);
     }
 

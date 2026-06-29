@@ -249,15 +249,11 @@ public class OkPostBuilder {
         okHttpClient.newCall(okHttpRequest).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, final IOException e) {
-                if (e instanceof SocketException) {
-
-                } else {
-                    //如果在重连的情况下，是主动取消网络是java.net.SocketException: Socket closed
-                    if (currentAgainCount < tryAgainCount && tryAgainCount > 0) { // 如果超时并未超过指定次数，则重新连接
-                        currentAgainCount++;
-                        okHttpClient.newCall(call.request()).enqueue(this);
-                        return;
-                    }
+                //如果在重连的情况下，是主动取消网络是java.net.SocketException: Socket closed
+                if (currentAgainCount < tryAgainCount && tryAgainCount > 0) {
+                    currentAgainCount++;
+                    okHttpClient.newCall(call.request()).enqueue(this);
+                    return;
                 }
 
                 removeOnceTag();
@@ -265,28 +261,22 @@ public class OkPostBuilder {
                     mDelivery.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-
                             String errorMsg;
-                            if (e instanceof SocketException) {
-
+                            if (e instanceof ConnectException) {
+                                errorMsg = context.getString(R.string.network_unknow);
+                            } else if (e instanceof SocketTimeoutException) {
+                                errorMsg = context.getString(R.string.network_overtime);
+                            } else if (e instanceof SocketException) {
+                                errorMsg = e.getMessage() == null ? context.getString(R.string.server_error) : e.getMessage();
                             } else {
-                                if (e instanceof ConnectException) {
-                                    errorMsg = context.getString(R.string.network_unknow);
-                                } else if (e instanceof SocketTimeoutException) {
-                                    errorMsg = context.getString(R.string.network_overtime);
-                                } else {
-                                    errorMsg = context.getString(R.string.server_error);
-                                }
-                                LogUtils.i("网络请求", "请求失败原因 ==> " + e.toString());
-                                resultMyCall.onError(errorMsg);
+                                errorMsg = context.getString(R.string.server_error);
                             }
-
+                            LogUtils.i("网络请求", "请求失败原因 ==> " + e.toString());
+                            resultMyCall.onError(errorMsg);
                             LogUtils.i("网络请求", "----------------------------- 请求结束 -----------------------------");
                             resultMyCall.onAfter();
-
                         }
                     }, 50);
-
                 }
             }
 
