@@ -172,8 +172,8 @@ public class DakaFragment extends BaseFragment {
                         boolean needcheckin = checktimes.getBoolean("needcheckin");
                         LogUtils.i("打卡流程", "getchecktimes success, needcheckin=" + needcheckin);
                         if (needcheckin) {
-                            txt_content.setText("正在签到，提交打卡中...");
-                            DakaModelImpl.netWork().signin(GANK_COMMAND, new SignInNetWorkListener(), tenantId);
+                            txt_content.setText("正在签到，执行前置检查...");
+                            DakaModelImpl.netWork().preCheckBeforeSubmit(GANK_COMMAND, new PreCheckNetWorkListener(), tenantId);
                         } else {
                             txt_content.setText("正在签到，读取签到记录...");
                             DakaModelImpl.netWork().checklist(GANK_COMMAND, new CheckListWorkListener(), tenantId);
@@ -186,8 +186,8 @@ public class DakaFragment extends BaseFragment {
                             boolean needcheckout = checktimes.getBoolean("needcheckout");
                             LogUtils.i("打卡流程", "getchecktimes success, needcheckout=" + needcheckout);
                             if (needcheckout) {
-                                txt_content.setText("正在签退，提交打卡中...");
-                                DakaModelImpl.netWork().signout(GANK_COMMAND, new SignOutNetWorkListener(), tenantId);
+                                txt_content.setText("正在签退，执行前置检查...");
+                                DakaModelImpl.netWork().preCheckBeforeSubmit(GANK_COMMAND, new PreCheckNetWorkListener(), tenantId);
                             } else {
                                 txt_content.setText("正在签退，读取签退记录...");
                                 DakaModelImpl.netWork().checklist(GANK_COMMAND, new CheckListWorkListener(), tenantId);
@@ -200,6 +200,38 @@ public class DakaFragment extends BaseFragment {
                 } catch (JSONException e) {
                     txt_content.setText("解析打卡状态失败：" + e.getMessage() + "\n" + trimResult(result));
                     LogUtils.e("打卡流程", "getchecktimes parse failed: " + e.toString());
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    class PreCheckNetWorkListener implements NetWorkListener {
+        @Override
+        public void onNetCallBack(int command, Object object) {
+            if (command == GANK_COMMAND) {
+                if (object instanceof NetFailBean) {
+                    String message = ((NetFailBean) object).getMessage();
+                    txt_content.setText("前置检查失败：" + message);
+                    LogUtils.e("打卡流程", "precheck failed: " + message);
+                    return;
+                }
+                String result = (String) object;
+                LogUtils.i("打卡流程", "precheck response: " + result);
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    LogUtils.i("打卡流程", "precheck success");
+                    if (viewId == R.id.txt_signin) {
+                        txt_content.setText("前置检查完成，正在签到...");
+                        DakaModelImpl.netWork().signin(GANK_COMMAND, new SignInNetWorkListener(), tenantId);
+                    } else if (viewId == R.id.txt_signout) {
+                        txt_content.setText("前置检查完成，正在签退...");
+                        DakaModelImpl.netWork().signout(GANK_COMMAND, new SignOutNetWorkListener(), tenantId);
+                    }
+                    LogUtils.i("请求结果", jsonObject.toString());
+                } catch (JSONException e) {
+                    txt_content.setText("前置检查解析失败：" + e.getMessage() + "\n" + trimResult(result));
+                    LogUtils.e("打卡流程", "precheck parse failed: " + e.toString());
                     e.printStackTrace();
                 }
             }

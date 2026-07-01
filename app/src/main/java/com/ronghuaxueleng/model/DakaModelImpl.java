@@ -28,10 +28,15 @@ public class DakaModelImpl extends ModelBase {
 
     private final String host = Base64Utils.decodeToString("YXBwLmRha2FiZy5jb20=");
     private final String ssid = Base64Utils.decodeToString("Sml1UWktT2ZmaWNl");
-    private final String verifycontent = "8F8057E632341985408C6829111F4673";
+    private final String verifycontent = "9911B2AE1E47B2E485A0291652BC4AAA";
     private final String location = Base64Utils.decodeToString("5YyX5Lqs5biC5rW35reA5Yy65b+X5by65Y2X5Zut5LmF5YW26L2v5Lu2KOaWh+aFp+WbreWKnuWFrOWMuik=");
     private final String mac = "2a:b2:b9:3c:a7:97";
     private final String phonetype = "BMH-AN20";
+    private final String preCheckVerifycontent = verifycontent;
+    private final String preCheckLocation = location;
+    private final String preCheckSsid = ssid;
+    private final String preCheckMac = mac;
+    private final String signinProjectId = "8E3BFAF2A0000041AD09C5CD47A605A1";
     private final String signoutProjectId = "8E3BFAF2A0000041AD09C5CD47A605A1";
     private final double signinLng = 116.37291;
     private final double signinLat = 39.957899;
@@ -95,8 +100,8 @@ public class DakaModelImpl extends ModelBase {
     }
 
     public void signin(int command, NetWorkListener netWorkListener, String tenantId) {
-        String signin = "aHR0cHM6Ly9hcHAuZGFrYWJnLmNvbS9tb2JpbGUvY2hlY2s/dmVyaWZ5dHlwZT0xJnZlcmlmeWNvbnRlbnQ9JXMmdGVuYW50aWQ9JXMmdGltZXN0YW1wPSVz";
-        String url = String.format(Base64Utils.decodeToString(signin), verifycontent, tenantId, System.currentTimeMillis());
+        String signin = "aHR0cHM6Ly9hcHAuZGFrYWJnLmNvbS9tb2JpbGUvY2hlY2s/dmVyaWZ5dHlwZT0wJnZlcmlmeWNvbnRlbnQ9JXMmdGVuYW50aWQ9JXMmdGltZXN0YW1wPSVz";
+        String url = String.format(Base64Utils.decodeToString(signin), myphone, tenantId, System.currentTimeMillis());
         LogUtils.i("打卡请求", "signin tenantId=" + tenantId);
         LogUtils.i("打卡请求", "signin url=" + url);
         HashMap<String, String> headers = buildHeaders();
@@ -112,9 +117,27 @@ public class DakaModelImpl extends ModelBase {
         sendOkHttpPost(paramsBuilder, netWorkListener);
     }
 
+    public void preCheckBeforeSubmit(int command, NetWorkListener netWorkListener, String tenantId) {
+        String preCheck = "aHR0cHM6Ly9hcHAuZGFrYWJnLmNvbS9tb2JpbGUvY2hlY2s/dmVyaWZ5dHlwZT0xJnZlcmlmeWNvbnRlbnQ9JXMmdGVuYW50aWQ9JXMmdGltZXN0YW1wPSVz";
+        String url = String.format(Base64Utils.decodeToString(preCheck), preCheckVerifycontent, tenantId, System.currentTimeMillis());
+        LogUtils.i("打卡请求", "precheck tenantId=" + tenantId);
+        LogUtils.i("打卡请求", "precheck url=" + url);
+        HashMap<String, String> headers = buildHeaders();
+        ParamsBuilder paramsBuilder = ParamsBuilder.build().command(command);
+        String bodyParams = buildPreCheckBodyParams();
+        LogUtils.i("打卡请求", "precheck body=" + bodyParams);
+        paramsBuilder.url(url)
+                .heads(headers)
+                .paramType(2)
+                .mediaType(MediaType.parse("text/plain; charset=utf-8"))
+                .overrideError(true)
+                .json(bodyParams);
+        sendOkHttpPost(paramsBuilder, netWorkListener);
+    }
+
     public void signout(int command, NetWorkListener netWorkListener, String tenantId) {
-        String signout = "aHR0cHM6Ly9hcHAuZGFrYWJnLmNvbS9tb2JpbGUvY2hlY2s/dmVyaWZ5dHlwZT0xJnZlcmlmeWNvbnRlbnQ9JXMmdGVuYW50aWQ9JXMmdGltZXN0YW1wPSVz";
-        String url = String.format(Base64Utils.decodeToString(signout), verifycontent, tenantId, System.currentTimeMillis());
+        String signout = "aHR0cHM6Ly9hcHAuZGFrYWJnLmNvbS9tb2JpbGUvY2hlY2s/dmVyaWZ5dHlwZT0wJnZlcmlmeWNvbnRlbnQ9JXMmdGVuYW50aWQ9JXMmdGltZXN0YW1wPSVz";
+        String url = String.format(Base64Utils.decodeToString(signout), myphone, tenantId, System.currentTimeMillis());
         LogUtils.i("打卡请求", "signout tenantId=" + tenantId);
         LogUtils.i("打卡请求", "signout url=" + url);
         HashMap<String, String> headers = buildHeaders();
@@ -160,7 +183,10 @@ public class DakaModelImpl extends ModelBase {
     private String buildSigninBodyParams() {
         try {
             JSONObject body = buildCommonCheckBody(signinLng, signinLat, 0);
+            body.put("projectid", signinProjectId);
             body.put("facestate", 2);
+            body.put("memo", "");
+            body.put("picnum", 0);
             return body.toString();
         } catch (JSONException e) {
             throw new IllegalStateException("build signin body failed", e);
@@ -185,6 +211,28 @@ public class DakaModelImpl extends ModelBase {
             return body.toString();
         } catch (JSONException e) {
             throw new IllegalStateException("build signout body failed", e);
+        }
+    }
+
+    private String buildPreCheckBodyParams() {
+        try {
+            JSONObject body = new JSONObject();
+            body.put("checktype", 1);
+            body.put("lng", signoutLng);
+            body.put("lat", signoutLat);
+            body.put("mockprobability", mockprobability);
+            body.put("turnname", "");
+            body.put("method", method);
+            body.put("accuracy", accuracy);
+            body.put("facestate", 2);
+            body.put("location", preCheckLocation);
+            body.put("ssid", preCheckSsid);
+            body.put("mac", preCheckMac);
+            body.put("phonetype", phonetype);
+            body.put("version", version);
+            return body.toString();
+        } catch (JSONException e) {
+            throw new IllegalStateException("build precheck body failed", e);
         }
     }
 
